@@ -1,8 +1,7 @@
 import { GAME_CONFIG } from "../data/config";
 import type { Position } from "../types";
-import React from "react";
 
-interface Props {
+interface IGameGrid {
   gridNumbers: number[];
   gameNumbers: number[];
   clickedSeq: number[];
@@ -12,7 +11,7 @@ interface Props {
   linePos: Position[];
 }
 
-const GameGrid: React.FC<Props> = ({
+const GameGrid = ({
   gridNumbers,
   gameNumbers,
   clickedSeq,
@@ -20,7 +19,7 @@ const GameGrid: React.FC<Props> = ({
   isOver,
   wrongClick,
   linePos,
-}) => {
+}: IGameGrid) => {
   /**
    * Determines what number to display in each cell:
    * - If the cell position matches a pattern position, shows the corresponding game number
@@ -65,7 +64,7 @@ const GameGrid: React.FC<Props> = ({
   };
 
   return (
-    <div className="grid grid-cols-10 gap-1 p-4 bg-white rounded-lg shadow-lg">
+    <div className="grid grid-cols-10 gap-1 p-4 bg-background rounded-lg shadow-lg">
       {Array.from(
         { length: GAME_CONFIG.GRID_SIZE * GAME_CONFIG.GRID_SIZE },
         (_, index) => {

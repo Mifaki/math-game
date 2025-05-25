@@ -1,15 +1,15 @@
+import { AUDIO_CONFIG, GAME_CONFIG } from "../data/config";
 import type { GameState, LevelConfig } from "../types";
 import { genPatternPos, genRandomStart } from "../lib/utlis";
 import { useCallback, useEffect, useState } from "react";
 
-import { GAME_CONFIG } from "../data/config";
+import { useGameAudio } from "./useGameAudio";
 
 /**
- * Custom hook that manages the game state and logic
+ * Custom hook that manages the game state and logic with audio integration
  * @param lvl - Level configuration containing difficulty settings
  */
 export const useGame = (lvl: LevelConfig) => {
-  // Initialize game state with default values
   const [state, setState] = useState<GameState>({
     numbers: [],
     gridNumbers: [],
@@ -24,6 +24,20 @@ export const useGame = (lvl: LevelConfig) => {
     pattern: "",
     startNum: GAME_CONFIG.LEVELS[0].startNumber,
   });
+
+  // Initialize game audio system
+  const {
+    playCorrectSound,
+    playWrongSound,
+    playGameOverSound,
+    playVictorySound,
+    playClickSound,
+    setVolume,
+    toggleMute,
+    isMuted,
+    volume,
+    isLoaded: audioLoaded,
+  } = useGameAudio(AUDIO_CONFIG);
 
   /**
    * Initializes a new game by:
@@ -83,47 +97,70 @@ export const useGame = (lvl: LevelConfig) => {
    * 2. Updates game state based on correct/incorrect clicks
    * 3. Manages health system and game over conditions
    * 4. Provides feedback messages to the player
+   * 5. Plays appropriate sound effects
    * @param clickedNum - The number that was clicked by the player
    */
   const handleClick = useCallback(
     (clickedNum: number): void => {
       if (state.isComplete || state.isOver) return;
 
+      playClickSound();
+
       const expectedNum = state.numbers[state.clickedSeq.length];
 
       if (clickedNum === expectedNum) {
         const newSeq = [...state.clickedSeq, clickedNum];
+        const isGameComplete = newSeq.length === state.numbers.length;
 
         setState((prev) => ({
           ...prev,
           clickedSeq: newSeq,
-          isComplete: newSeq.length === state.numbers.length,
-          msg:
-            newSeq.length === state.numbers.length
-              ? `Selamat! Kamu berhasil menyelesaikan Level ${lvl.level}! 🎉`
-              : `Benar! Lanjutkan ke angka ${state.numbers[newSeq.length].toLocaleString()}`,
+          isComplete: isGameComplete,
+          msg: isGameComplete
+            ? `Selamat! Kamu berhasil menyelesaikan Level ${lvl.level}! 🎉`
+            : `Benar! Lanjutkan ke angka ${state.numbers[newSeq.length].toLocaleString()}`,
           wrongClick: null,
         }));
+
+        if (isGameComplete) {
+          playVictorySound();
+        } else {
+          playCorrectSound();
+        }
       } else {
         const newHealth = state.health - 1;
+        const isGameOver = newHealth <= 0;
 
         setState((prev) => ({
           ...prev,
           health: newHealth,
           wrongClick: clickedNum,
-          isOver: newHealth <= 0,
-          msg:
-            newHealth <= 0
-              ? "Game Over! Nyawa habis. Klik 'Mulai Ulang' untuk bermain lagi. 💔"
-              : `Salah! Sisa nyawa: ${newHealth}. Coba lagi!`,
+          isOver: isGameOver,
+          msg: isGameOver
+            ? "Game Over! Nyawa habis. Klik 'Mulai Ulang' untuk bermain lagi. 💔"
+            : `Salah! Sisa nyawa: ${newHealth}. Coba lagi!`,
         }));
+
+        if (isGameOver) {
+          playGameOverSound();
+        } else {
+          playWrongSound();
+        }
 
         setTimeout(() => {
           setState((prev) => ({ ...prev, wrongClick: null }));
         }, 1000);
       }
     },
-    [state, lvl.level]
+    [
+      state,
+      lvl.level,
+      playClickSound,
+      playCorrectSound,
+      playWrongSound,
+      playGameOverSound,
+      playVictorySound,
+    ]
   );
 
   const resetGame = (): void => {
@@ -138,5 +175,12 @@ export const useGame = (lvl: LevelConfig) => {
     state,
     handleClick,
     resetGame,
+    gameAudio: {
+      setVolume,
+      toggleMute,
+      isMuted,
+      volume,
+      audioLoaded,
+    },
   };
 };

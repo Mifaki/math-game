@@ -30,3 +30,12 @@ export const GAME_CONFIG = {
     },
   ] as LevelConfig[],
 };
+
+export const AUDIO_CONFIG = {
+  backgroundMusic: "/audio/background-music.mp3",
+  correctSound: "/audio/correct.mp3",
+  wrongSound: "/audio/wrong.mp3",
+  gameOverSound: "/audio/game-over.mp3",
+  victorySound: "/audio/victory.mp3",
+  clickSound: "/audio/click.mp3",
+};
