@@ -26,24 +26,26 @@ function Home() {
   ];
 
   return (
-    <main className="w-screen min-h-screen flex flex-col justify-center items-center gap-8">
+    <main className="w-full min-h-screen flex flex-col justify-center items-center gap-4 sm:gap-6 md:gap-8 px-4 py-8 relative overflow-hidden">
       <img
         src="/img/banner.png"
         alt="Banner"
-        className="aspect-video w-120 h-60"
+        className="w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl h-auto aspect-video object-contain"
       />
-      <div className="flex flex-col items-center gap-6">
+
+      <div className="flex flex-col items-center gap-4 sm:gap-6 z-10">
         <Link
           to={"/play"}
           search={{ level: parseInt(selectedLevel) }}
-          className="group relative bg-primary hover:bg-primary/90 text-primary-foreground rounded-full p-8 md:p-12 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 active:scale-95 mb-8"
+          className="group relative bg-primary hover:bg-primary/90 text-primary-foreground rounded-full p-6 sm:p-8 md:p-10 lg:p-12 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 active:scale-95 mb-4 sm:mb-6 md:mb-8"
         >
-          <Play className="w-12 h-12 ml-2 group-hover:scale-110 transition-transform duration-200" />
+          <Play className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 ml-1 sm:ml-2 group-hover:scale-110 transition-transform duration-200" />
           <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/50 to-accent/50 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
         </Link>
-        <div className="flex items-center gap-6">
+
+        <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full max-w-md">
           <Select value={selectedLevel} onValueChange={setSelectedLevel}>
-            <SelectTrigger className="w-48 text-lg py-6">
+            <SelectTrigger className="w-full sm:w-48 text-base sm:text-lg py-4 sm:py-6">
               <SelectValue placeholder="Pilih Level" />
             </SelectTrigger>
             <SelectContent>
@@ -54,22 +56,24 @@ function Home() {
               ))}
             </SelectContent>
           </Select>
+
           <Button
             size="lg"
             onClick={() => {
               navigate({ to: "/instruction" });
             }}
-            className="text-lg px-8 py-6 font-semibold"
+            className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 font-semibold whitespace-nowrap"
           >
             Petunjuk
           </Button>
         </div>
       </div>
-      <div className="absolute bottom-0 right-0 -translate-x-[100%]">
+
+      <div className="hidden md:block absolute bottom-0 right-0 lg:right-4 xl:right-8">
         <img
           src="/img/pirate.png"
           alt="Pirate Character"
-          className="w-80 h-100 aspect-auto"
+          className="w-48 lg:w-64 xl:w-80 h-auto aspect-auto"
         />
       </div>
     </main>
