@@ -1,3 +1,4 @@
+// Updated GameContainer.tsx - Add this to your existing component
 import {
   Dialog,
   DialogContent,
@@ -6,6 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/shared/components/ui/dialog";
+import { useEffect, useState } from "react";
 
 import { Button } from "@/shared/components/ui/button";
 import ChatBubble from "./ChatBubble";
@@ -13,7 +15,10 @@ import FloatingAudioControls from "@/shared/components/FloatingAudioControls";
 import { GAME_CONFIG } from "../data/config";
 import GameGrid from "./GameGrid";
 import HealthDisplay from "./HealthDisplay";
+import { calculateScore } from "../lib/utlis";
 import { useGame } from "../usecase/useGame";
+import { useNavigate } from "@tanstack/react-router";
+import { useScore } from "@/shared/usecase/useScore";
 import { useUIState } from "../usecase/useUIState";
 
 interface IGameContainer {
@@ -21,12 +26,30 @@ interface IGameContainer {
 }
 
 const GameContainer = ({ level }: IGameContainer) => {
+  const navigate = useNavigate();
+
+  const { saveScore } = useScore();
+
+  const [score, setScore] = useState<number>();
+
   const currentLvl =
     GAME_CONFIG.LEVELS.find((l) => l.level === level) || GAME_CONFIG.LEVELS[0];
 
   const { state, handleClick, resetGame, gameAudio } = useGame(currentLvl);
   const { showChatBubble, showDialog, setShowDialog, chatType } =
     useUIState(state);
+
+  useEffect(() => {
+    if (state.isComplete && !state.isOver) {
+      const finalScore = calculateScore(
+        state.health,
+        GAME_CONFIG.MAX_HEALTH,
+        level
+      );
+      setScore(finalScore);
+      saveScore(finalScore, level);
+    }
+  }, [state.isComplete, state.isOver, level, state.health]);
 
   if (
     !state.isInit ||
@@ -100,11 +123,11 @@ const GameContainer = ({ level }: IGameContainer) => {
               </DialogTitle>
               <DialogDescription className="text-center text-lg mt-4">
                 {state.isComplete
-                  ? "Selamat kamu berhasil menemukan angka ajaib nya !"
+                  ? `Selamat kamu berhasil menemukan angka ajaib nya! Skor: ${score}`
                   : "Wahhh kesempatanmu udah abis nih, Coba lagi yuk !"}
               </DialogDescription>
             </DialogHeader>
-            <DialogFooter className="sm:justify-center">
+            <DialogFooter className="sm:justify-center gap-2">
               <Button
                 onClick={() => {
                   setShowDialog(false);
@@ -116,8 +139,20 @@ const GameContainer = ({ level }: IGameContainer) => {
                     : "bg-red-600 hover:bg-red-700"
                 }
               >
-                {state.isComplete ? "Hasil" : "Coba Lagi"}
+                {state.isComplete ? "Main Lagi" : "Coba Lagi"}
               </Button>
+              {state.isComplete && (
+                <Button
+                  onClick={() => {
+                    setShowDialog(false);
+                    navigate({ to: "/score" });
+                  }}
+                  variant="outline"
+                  className="border-green-600 text-green-600 hover:bg-green-50"
+                >
+                  Lihat Skor
+                </Button>
+              )}
             </DialogFooter>
           </DialogContent>
         </Dialog>

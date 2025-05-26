@@ -12,6 +12,7 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
+import { Route as ScoreIndexImport } from './routes/score/index'
 import { Route as PlayIndexImport } from './routes/play/index'
 import { Route as InstructionIndexImport } from './routes/instruction/index'
 
@@ -20,6 +21,12 @@ import { Route as InstructionIndexImport } from './routes/instruction/index'
 const IndexRoute = IndexImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const ScoreIndexRoute = ScoreIndexImport.update({
+  id: '/score/',
+  path: '/score/',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -60,6 +67,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PlayIndexImport
       parentRoute: typeof rootRoute
     }
+    '/score/': {
+      id: '/score/'
+      path: '/score'
+      fullPath: '/score'
+      preLoaderRoute: typeof ScoreIndexImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
@@ -69,12 +83,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/instruction': typeof InstructionIndexRoute
   '/play': typeof PlayIndexRoute
+  '/score': typeof ScoreIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/instruction': typeof InstructionIndexRoute
   '/play': typeof PlayIndexRoute
+  '/score': typeof ScoreIndexRoute
 }
 
 export interface FileRoutesById {
@@ -82,14 +98,15 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/instruction/': typeof InstructionIndexRoute
   '/play/': typeof PlayIndexRoute
+  '/score/': typeof ScoreIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/instruction' | '/play'
+  fullPaths: '/' | '/instruction' | '/play' | '/score'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/instruction' | '/play'
-  id: '__root__' | '/' | '/instruction/' | '/play/'
+  to: '/' | '/instruction' | '/play' | '/score'
+  id: '__root__' | '/' | '/instruction/' | '/play/' | '/score/'
   fileRoutesById: FileRoutesById
 }
 
@@ -97,12 +114,14 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   InstructionIndexRoute: typeof InstructionIndexRoute
   PlayIndexRoute: typeof PlayIndexRoute
+  ScoreIndexRoute: typeof ScoreIndexRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   InstructionIndexRoute: InstructionIndexRoute,
   PlayIndexRoute: PlayIndexRoute,
+  ScoreIndexRoute: ScoreIndexRoute,
 }
 
 export const routeTree = rootRoute
@@ -117,7 +136,8 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/instruction/",
-        "/play/"
+        "/play/",
+        "/score/"
       ]
     },
     "/": {
@@ -128,6 +148,9 @@ export const routeTree = rootRoute
     },
     "/play/": {
       "filePath": "play/index.tsx"
+    },
+    "/score/": {
+      "filePath": "score/index.tsx"
     }
   }
 }
