@@ -23,7 +23,7 @@ function Score() {
   }
 
   return (
-    <div className="min-h-screen py-8 flex flex-col justify-center items-center">
+    <main className="min-h-screen py-8 flex flex-col justify-center items-center">
       <ScoreBanner />
       <div className="container mx-auto flex flex-col max-w-lg justify-center">
         {latestScore ? (
@@ -35,6 +35,6 @@ function Score() {
           <NoScoreState />
         )}
       </div>
-    </div>
+    </main>
   );
 }

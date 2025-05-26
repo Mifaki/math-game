@@ -6,10 +6,6 @@ import { useNavigate } from "@tanstack/react-router";
 const NoScoreState = () => {
   const navigate = useNavigate();
 
-  const handleStartPlaying = () => {
-    navigate({ to: "/play" });
-  };
-
   return (
     <Card className="w-full max-w-md mx-auto shadow-lg border-2 border-gray-200">
       <CardContent className="text-center py-8 space-y-6">
