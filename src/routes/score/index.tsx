@@ -13,19 +13,21 @@ function Score() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center px-4">
         <div className="text-center">
-          <div className="text-4xl mb-4">⏳</div>
-          <div className="text-xl text-purple-800">Memuat skor...</div>
+          <div className="text-3xl sm:text-4xl mb-4">⏳</div>
+          <div className="text-lg sm:text-xl text-purple-800">
+            Memuat skor...
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <main className="min-h-screen py-8 flex flex-col justify-center items-center">
+    <main className="min-h-screen py-4 sm:py-6 lg:py-8 flex flex-col justify-center items-center px-4">
       <ScoreBanner />
-      <div className="container mx-auto flex flex-col max-w-lg justify-center">
+      <div className="container mx-auto flex flex-col w-full max-w-sm sm:max-w-md lg:max-w-lg justify-center">
         {latestScore ? (
           <ScoreCard
             scoreData={latestScore}

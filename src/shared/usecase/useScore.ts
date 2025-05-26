@@ -11,7 +11,6 @@ const SCORE_STORAGE_KEY = "game-latest-score";
 
 export const useScore = () => {
   const [latestScore, setLatestScore] = useState<ScoreData | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
   const loadScore = () => {
     try {
@@ -24,8 +23,6 @@ export const useScore = () => {
     } catch (error) {
       console.error("Error loading score:", error);
       setLatestScore(null);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -60,7 +57,6 @@ export const useScore = () => {
 
   return {
     latestScore,
-    isLoading,
     saveScore,
     clearScore,
     refreshScore: loadScore,
