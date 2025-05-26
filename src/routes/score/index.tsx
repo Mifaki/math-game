@@ -9,20 +9,7 @@ export const Route = createFileRoute("/score/")({
 });
 
 function Score() {
-  const { latestScore, isLoading, clearScore } = useScore();
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center px-4">
-        <div className="text-center">
-          <div className="text-3xl sm:text-4xl mb-4">⏳</div>
-          <div className="text-lg sm:text-xl text-purple-800">
-            Memuat skor...
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const { latestScore, clearScore } = useScore();
 
   return (
     <main className="min-h-screen py-4 sm:py-6 lg:py-8 flex flex-col justify-center items-center px-4">
