@@ -69,7 +69,10 @@ const ScoreCard = ({ scoreData, onClearScore }: ScoreCardProps) => {
         )}
         <Button
           onClick={() => {
-            navigate({ to: "/play" });
+            navigate({
+              to: "/play",
+              search: { level: scoreData.level },
+            });
           }}
         >
           Main Lagi

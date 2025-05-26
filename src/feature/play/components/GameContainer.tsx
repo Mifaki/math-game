@@ -1,4 +1,3 @@
-// Updated GameContainer.tsx - Add this to your existing component
 import {
   Dialog,
   DialogContent,
@@ -7,6 +6,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/shared/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shared/components/ui/select";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/shared/components/ui/button";
@@ -27,10 +33,15 @@ interface IGameContainer {
 
 const GameContainer = ({ level }: IGameContainer) => {
   const navigate = useNavigate();
-
   const { saveScore } = useScore();
-
   const [score, setScore] = useState<number>();
+  const [selectedNewLevel, setSelectedNewLevel] = useState("1");
+
+  const levels = [
+    { value: "1", label: "Level 1 - Mudah" },
+    { value: "2", label: "Level 2 - Sedang" },
+    { value: "3", label: "Level 3 - Sulit" },
+  ];
 
   const currentLvl =
     GAME_CONFIG.LEVELS.find((l) => l.level === level) || GAME_CONFIG.LEVELS[0];
@@ -50,6 +61,14 @@ const GameContainer = ({ level }: IGameContainer) => {
       saveScore(finalScore, level);
     }
   }, [state.isComplete, state.isOver, level, state.health]);
+
+  const handlePlayNewLevel = () => {
+    setShowDialog(false);
+    navigate({
+      to: "/play",
+      search: { level: parseInt(selectedNewLevel) },
+    });
+  };
 
   if (
     !state.isInit ||
@@ -112,7 +131,7 @@ const GameContainer = ({ level }: IGameContainer) => {
         </div>
 
         <Dialog open={showDialog} onOpenChange={setShowDialog}>
-          <DialogContent className="sm:max-w-md">
+          <DialogContent>
             <DialogHeader>
               <DialogTitle className="text-center text-xl">
                 {state.isComplete ? (
@@ -127,31 +146,66 @@ const GameContainer = ({ level }: IGameContainer) => {
                   : "Wahhh kesempatanmu udah abis nih, Coba lagi yuk !"}
               </DialogDescription>
             </DialogHeader>
+
+            {state.isComplete && (
+              <div className="my-4">
+                <label className="block text-sm font-medium mb-2 text-center">
+                  Pilih Level Selanjutnya:
+                </label>
+                <Select
+                  value={selectedNewLevel}
+                  onValueChange={setSelectedNewLevel}
+                >
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Pilih Level" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {levels.map((levelOption) => (
+                      <SelectItem
+                        key={levelOption.value}
+                        value={levelOption.value}
+                      >
+                        {levelOption.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+
             <DialogFooter className="sm:justify-center gap-2">
               <Button
                 onClick={() => {
                   setShowDialog(false);
                   resetGame();
                 }}
+                variant={state.isComplete ? "outline" : "default"}
                 className={
-                  state.isComplete
-                    ? "bg-green-600 hover:bg-green-700"
-                    : "bg-red-600 hover:bg-red-700"
+                  state.isComplete ? "" : "bg-red-600 hover:bg-red-700"
                 }
               >
-                {state.isComplete ? "Main Lagi" : "Coba Lagi"}
+                {state.isComplete ? "Main Level Ini Lagi" : "Coba Lagi"}
               </Button>
+
               {state.isComplete && (
-                <Button
-                  onClick={() => {
-                    setShowDialog(false);
-                    navigate({ to: "/score" });
-                  }}
-                  variant="outline"
-                  className="border-green-600 text-green-600 hover:bg-green-50"
-                >
-                  Lihat Skor
-                </Button>
+                <>
+                  <Button
+                    onClick={handlePlayNewLevel}
+                    className="bg-secondary hover:bg-secondary"
+                  >
+                    Main Level Terpilih
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setShowDialog(false);
+                      navigate({ to: "/score" });
+                    }}
+                    variant="outline"
+                    className="bg-green-600 hover:bg-green-500 text-white"
+                  >
+                    Lihat Skor
+                  </Button>
+                </>
               )}
             </DialogFooter>
           </DialogContent>

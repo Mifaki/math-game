@@ -36,11 +36,9 @@ export const useGameAudio = (config: GameAudioConfig): UseGameAudioReturn => {
   const [volume, setVolumeState] = useState(0.7);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Initialize audio elements
   useEffect(() => {
     const initAudio = async () => {
       try {
-        // Initialize sound effects
         if (config.correctSound) {
           correctSoundRef.current = new Audio(config.correctSound);
           correctSoundRef.current.volume = volume;
@@ -67,7 +65,7 @@ export const useGameAudio = (config: GameAudioConfig): UseGameAudioReturn => {
 
         if (config.clickSound) {
           clickSoundRef.current = new Audio(config.clickSound);
-          clickSoundRef.current.volume = volume * 0.5; // Quieter for clicks
+          clickSoundRef.current.volume = volume * 0.5;
           clickSoundRef.current.preload = "auto";
         }
 
@@ -79,9 +77,7 @@ export const useGameAudio = (config: GameAudioConfig): UseGameAudioReturn => {
 
     initAudio();
 
-    // Cleanup function
     return () => {
-      // Stop and cleanup all audio
       [
         correctSoundRef,
         wrongSoundRef,
@@ -97,7 +93,6 @@ export const useGameAudio = (config: GameAudioConfig): UseGameAudioReturn => {
     };
   }, [config, volume]);
 
-  // Update volumes when they change
   useEffect(() => {
     const gameVolume = isMuted ? 0 : volume;
     [correctSoundRef, wrongSoundRef, gameOverSoundRef, victorySoundRef].forEach(
@@ -108,7 +103,6 @@ export const useGameAudio = (config: GameAudioConfig): UseGameAudioReturn => {
       }
     );
 
-    // Click sound should be quieter
     if (clickSoundRef.current) {
       clickSoundRef.current.volume = isMuted ? 0 : volume * 0.5;
     }
@@ -119,11 +113,9 @@ export const useGameAudio = (config: GameAudioConfig): UseGameAudioReturn => {
       if (!audioRef.current || isMuted) return;
 
       try {
-        // Reset the audio to beginning and play
         audioRef.current.currentTime = 0;
         const playPromise = audioRef.current.play();
 
-        // Handle play promise for browsers that require user interaction
         if (playPromise !== undefined) {
           playPromise.catch((error) => {
             console.warn("Audio play failed:", error);
