@@ -30,15 +30,15 @@ function Home() {
       <img
         src="/img/banner.png"
         alt="Banner"
-        className="aspect-video w-160 h-80"
+        className="aspect-video w-120 h-60"
       />
       <div className="flex flex-col items-center gap-6">
         <Link
           to={"/play"}
           search={{ level: parseInt(selectedLevel) }}
-          className="group relative bg-primary hover:bg-primary/90 text-primary-foreground rounded-full p-8 md:p-12 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 active:scale-95"
+          className="group relative bg-primary hover:bg-primary/90 text-primary-foreground rounded-full p-8 md:p-12 shadow-2xl hover:shadow-3xl transition-all duration-300 hover:scale-105 active:scale-95 mb-8"
         >
-          <Play className="w-12 h-12 md:w-16 md:h-16 ml-2 group-hover:scale-110 transition-transform duration-200" />
+          <Play className="w-12 h-12 ml-2 group-hover:scale-110 transition-transform duration-200" />
           <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/50 to-accent/50 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
         </Link>
         <div className="flex items-center gap-6">
@@ -65,11 +65,11 @@ function Home() {
           </Button>
         </div>
       </div>
-      <div className="absolute bottom-0 right-0 -translate-x-1/2">
+      <div className="absolute bottom-0 right-0 -translate-x-[100%]">
         <img
           src="/img/pirate.png"
           alt="Pirate Character"
-          className="w-90 h-120 aspect-auto"
+          className="w-80 h-100 aspect-auto"
         />
       </div>
     </main>
