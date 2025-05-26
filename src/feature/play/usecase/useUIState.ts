@@ -10,7 +10,7 @@ interface UseUIStateReturn {
 }
 
 export const useUIState = (gameState: GameState): UseUIStateReturn => {
-  const [showChatBubble, setShowChatBubble] = useState(true);
+  const [showChatBubble, setShowChatBubble] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [chatType, setChatType] = useState<"correct" | "wrong" | "neutral">(
     "neutral"
@@ -29,20 +29,9 @@ export const useUIState = (gameState: GameState): UseUIStateReturn => {
     if (isCorrectAnswer || isWrongAnswer) {
       setChatType(isCorrectAnswer ? "correct" : "wrong");
       setShowChatBubble(true);
-
       const timer = setTimeout(() => {
         setShowChatBubble(false);
       }, 3000);
-
-      return () => clearTimeout(timer);
-    } else if (gameState.msg && !gameState.isComplete && !gameState.isOver) {
-      setChatType("neutral");
-      setShowChatBubble(true);
-
-      const timer = setTimeout(() => {
-        setShowChatBubble(false);
-      }, 4000);
-
       return () => clearTimeout(timer);
     }
   }, [gameState.msg, gameState.isInit, gameState.clickedSeq.length]);
@@ -59,7 +48,6 @@ export const useUIState = (gameState: GameState): UseUIStateReturn => {
       const timer = setTimeout(() => {
         setShowDialog(true);
       }, 1500);
-
       return () => clearTimeout(timer);
     } else {
       setShowDialog(false);

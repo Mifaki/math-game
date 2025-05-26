@@ -55,7 +55,9 @@ const FloatingAudioControls: React.FC<FloatingAudioControlsProps> = ({
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div
+      className={`${showGameControls ? "z-100" : "z-50"} fixed bottom-6 right-6`}
+    >
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>
           <Button
