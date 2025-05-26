@@ -89,9 +89,50 @@ const GameContainer = ({ level }: IGameContainer) => {
   }
 
   return (
-    <div className="min-h-screen flex justify-center items-center p-4">
-      <div className="max-w-6xl mx-auto relative">
-        <div className="flex items-end gap-8 h-full">
+    <div className="min-h-screen flex justify-center items-center p-2 sm:p-4">
+      <div className="w-full max-w-5xl mx-auto relative">
+        <div className="block lg:hidden">
+          <div className="space-y-4">
+            <div className="flex items-center justify-between px-2 max-w-xl mx-auto">
+              <HealthDisplay
+                health={state.health}
+                maxHealth={GAME_CONFIG.MAX_HEALTH}
+              />
+              <Button
+                onClick={resetGame}
+                size="sm"
+                className="bg-red-600 hover:bg-red-700 text-white text-xs px-3 py-2"
+              >
+                {state.isComplete || state.isOver ? "Main Lagi" : "Mulai Ulang"}
+              </Button>
+            </div>
+
+            <div className="px-2">
+              <GameGrid
+                gridNumbers={state.gridNumbers}
+                gameNumbers={state.numbers}
+                clickedSeq={state.clickedSeq}
+                onNumClick={handleClick}
+                isOver={state.isOver}
+                wrongClick={state.wrongClick}
+                linePos={state.linePos}
+              />
+            </div>
+
+            <div className="flex justify-center relative">
+              <div className="relative mt-16">
+                <img
+                  src="/img/pirate.png"
+                  alt="Pirate Character"
+                  className="w-32 h-auto"
+                />
+                <ChatBubble type={chatType} show={showChatBubble} />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="hidden lg:flex items-end gap-8 h-full">
           <div className="flex-1">
             <div className="mb-4 flex items-center justify-between">
               <HealthDisplay
@@ -131,16 +172,16 @@ const GameContainer = ({ level }: IGameContainer) => {
         </div>
 
         <Dialog open={showDialog} onOpenChange={setShowDialog}>
-          <DialogContent>
+          <DialogContent className="max-w-md mx-auto">
             <DialogHeader>
-              <DialogTitle className="text-center text-xl">
+              <DialogTitle className="text-center text-lg sm:text-xl">
                 {state.isComplete ? (
                   <>✅ Yeay Kamu Berhasil ✅</>
                 ) : (
                   <>❌ Ooops ❌</>
                 )}
               </DialogTitle>
-              <DialogDescription className="text-center text-lg mt-4">
+              <DialogDescription className="text-center text-base sm:text-lg mt-4">
                 {state.isComplete
                   ? `Selamat kamu berhasil menemukan angka ajaib nya! Skor: ${score}`
                   : "Wahhh kesempatanmu udah abis nih, Coba lagi yuk !"}
@@ -173,16 +214,16 @@ const GameContainer = ({ level }: IGameContainer) => {
               </div>
             )}
 
-            <DialogFooter className="sm:justify-center gap-2">
+            <DialogFooter className="flex-col sm:flex-row sm:justify-center gap-2">
               <Button
                 onClick={() => {
                   setShowDialog(false);
                   resetGame();
                 }}
                 variant={state.isComplete ? "outline" : "default"}
-                className={
+                className={`w-full sm:w-auto ${
                   state.isComplete ? "" : "bg-red-600 hover:bg-red-700"
-                }
+                }`}
               >
                 {state.isComplete ? "Main Level Ini Lagi" : "Coba Lagi"}
               </Button>
@@ -191,7 +232,7 @@ const GameContainer = ({ level }: IGameContainer) => {
                 <>
                   <Button
                     onClick={handlePlayNewLevel}
-                    className="bg-secondary hover:bg-secondary"
+                    className="w-full sm:w-auto bg-secondary hover:bg-secondary"
                   >
                     Main Level Terpilih
                   </Button>
@@ -201,7 +242,7 @@ const GameContainer = ({ level }: IGameContainer) => {
                       navigate({ to: "/score" });
                     }}
                     variant="outline"
-                    className="bg-green-600 hover:bg-green-500 text-white"
+                    className="w-full sm:w-auto bg-green-600 hover:bg-green-500 text-white"
                   >
                     Lihat Skor
                   </Button>
